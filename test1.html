@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>NPI-16 自恋倾向自测</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      font-family: "Microsoft YaHei", sans-serif;
+      background: #f9fafb;
+      padding: 20px;
+      max-width: 700px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .question {
+      margin: 20px 0;
+      padding: 15px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    button {
+      margin-top: 15px;
+      margin-right: 10px;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      background: #4CAF50;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      background: #e3f2fd;
+      font-size: 16px;
+      white-space: pre-line;
+    }
+  </style>
+</head>
+<body>
+  <h1>NPI-16 自恋倾向自测</h1>
+  <form id="quizForm"></form>
+  <button type="button" onclick="calculateScore()">提交测试</button>
+  <button type="button" onclick="downloadResult()">导出 PNG</button>
+  <button type="button" onclick="exportPDF()">导出 PDF</button>
+  <div id="result"></div>
+
+  <script>
+    const questions = [
+      ["我喜欢成为注意的中心。", "我不太喜欢成为焦点。"],
+      ["我比大多数人都要特别。", "我和别人差不多。"],
+      ["我觉得自己比别人更能做大事。", "我不认为自己比别人更特别。"],
+      ["我喜欢别人仰慕我。", "我不太在意别人是否仰慕我。"],
+      ["我不太在乎别人怎么想。", "我很在意别人对我的看法。"],
+      ["我相信自己会成就伟大事业。", "我觉得自己不会比别人更成功。"],
+      ["我更喜欢领导别人。", "我更愿意做团队一员。"],
+      ["如果我愿意，我能影响很多人。", "我觉得自己影响力有限。"],
+      ["我渴望别人认可我。", "我不太需要别人的认可。"],
+      ["我觉得自己天生就比别人优秀。", "我觉得大家生来差不多。"],
+      ["我在很多事情上比别人更出色。", "我只是普通水平。"],
+      ["如果别人不同意我，我通常认为他们不懂。", "我会尝试理解别人的观点。"],
+      ["我喜欢控制局面。", "我通常随和，不喜欢控制别人。"],
+      ["我容易嫉妒别人。", "我觉得别人容易嫉妒我。"],
+      ["我喜欢炫耀我的成就。", "我不喜欢炫耀。"],
+      ["我经常觉得自己比别人更值得成功。", "我认为大家的机会是差不多的。"]
+    ];
+
+    const narcissisticAnswers = [0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0];
+
+    const form = document.getElementById("quizForm");
+    questions.forEach((q, i) => {
+      const div = document.createElement("div");
+      div.className = "question";
+      div.innerHTML = `
+        <p><b>第 ${i+1} 题</b></p>
+        <label><input type="radio" name="q${i}" value="0"> ${q[0]}</label><br>
+        <label><input type="radio" name="q${i}" value="1"> ${q[1]}</label>
+      `;
+      form.appendChild(div);
+    });
+
+    let lastResult = "";
+
+    function calculateScore() {
+      let score = 0;
+      for (let i = 0; i < questions.length; i++) {
+        const answer = document.querySelector(`input[name="q${i}"]:checked`);
+        if (!answer) {
+          alert(`请完成第 ${i+1} 题`);
+          return;
+        }
+        if (parseInt(answer.value) === narcissisticAnswers[i]) {
+          score++;
+        }
+      }
+
+      let resultText = `你的得分：${score} / 16\n\n`;
+      if (score <= 5) {
+        resultText += "👉 自恋倾向低：比较谦逊、随和。";
+      } else if (score <= 10) {
+        resultText += "👉 自恋倾向中等：适度自信，有时需要关注自我中心的倾向。";
+      } else {
+        resultText += "👉 自恋倾向较高：可能在人际中比较强势、渴望赞美，建议注意平衡。";
+      }
+      resultText += "\n\n⚠️ 本测试仅供自我参考，不是临床诊断。";
+
+      document.getElementById("result").innerText = resultText;
+      lastResult = resultText;
+    }
+
+    function downloadResult() {
+      const resultDiv = document.getElementById("result");
+      if (!resultDiv.innerText.trim()) {
+        alert("请先完成测试并点击提交！");
+        return;
+      }
+      html2canvas(resultDiv).then(canvas => {
+        const link = document.createElement("a");
+        link.download = "NPI16测试结果.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      });
+    }
+
+    async function exportPDF() {
+      if (!lastResult) {
+        alert("请先完成测试并点击提交！");
+        return;
+      }
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const now = new Date().toLocaleString();
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(18);
+      doc.text("NPI-16 自恋倾向自测报告", 20, 20);
+
+      doc.setFontSize(12);
+      doc.text(`测试时间：${now}`, 20, 30);
+
+      const lines = doc.splitTextToSize(lastResult, 170);
+      doc.text(lines, 20, 50);
+
+      doc.save("NPI16测试报告.pdf");
+    }
+  </script>
+</body>
+</html>

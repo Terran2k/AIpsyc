@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>NPD 自查清单</title>
+  <style>
+    body {
+      font-family: "Microsoft YaHei", sans-serif;
+      background: #f9fafb;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .question {
+      margin: 20px 0;
+      padding: 15px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin: 5px 0;
+      cursor: pointer;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      background: #4CAF50;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 10px;
+      background: #e3f2fd;
+      font-size: 16px;
+      white-space: pre-line;
+    }
+  </style>
+</head>
+<body>
+  <h1>NPD 自查清单（自测报告版）</h1>
+  <form id="quizForm"></form>
+  <button type="button" onclick="calculateReport()">提交测试</button>
+  <div id="result"></div>
+
+  <script>
+    const questions = [
+      {
+        q: "1. 自尊与价值感",
+        options: ["我常常需要别人夸我、认可我，否则会觉得不安。", "我的自尊比较稳定，不需要别人一直认可才能感觉有价值。"],
+        healthy: 1
+      },
+      {
+        q: "2. 面对批评",
+        options: ["我对批评很敏感，经常觉得别人是在攻击我。", "我能比较冷静地接受批评，把它当作改进的机会。"],
+        healthy: 1
+      },
+      {
+        q: "3. 学习与改正",
+        options: ["我很难承认自己错了，更倾向于坚持己见。", "我愿意听取不同意见，并能修正自己的想法。"],
+        healthy: 1
+      },
+      {
+        q: "4. 人际关系模式",
+        options: ["我有时会利用人际关系来满足自己的需要。", "我在人际关系中注重互惠，既愿意给予，也乐于接受支持。"],
+        healthy: 1
+      },
+      {
+        q: "5. 同理心",
+        options: ["我常常不太理解别人为什么有某些情绪。", "我能够自然地共情别人，理解并回应他们的感受。"],
+        healthy: 1
+      },
+      {
+        q: "6. 特权感",
+        options: ["我觉得自己天生就应该得到一些特别待遇。", "我认为自己和别人是平等的，不觉得自己“天生应得”更多。"],
+        healthy: 1
+      },
+      {
+        q: "7. 冲突处理",
+        options: ["在冲突中，我更倾向于证明自己对，而不是修复关系。", "在冲突后，我愿意主动认错或和解，重视关系的恢复。"],
+        healthy: 1
+      },
+      {
+        q: "8. 自我价值来源",
+        options: ["我的价值感主要来自成就、比较和他人的评价。", "我的价值感更多来自内心标准和真实体验。"],
+        healthy: 1
+      }
+    ];
+
+    const form = document.getElementById("quizForm");
+
+    // 渲染题目
+    questions.forEach((item, i) => {
+      const div = document.createElement("div");
+      div.className = "question";
+      div.innerHTML = `<p><b>${item.q}</b></p>
+        <label><input type="radio" name="q${i}" value="0"> ${item.options[0]}</label>
+        <label><input type="radio" name="q${i}" value="1"> ${item.options[1]}</label>`;
+      form.appendChild(div);
+    });
+
+    function calculateReport() {
+      let score = 0;
+      let answers = [];
+
+      for (let i = 0; i < questions.length; i++) {
+        const answer = document.querySelector(`input[name="q${i}"]:checked`);
+        if (!answer) {
+          alert(`请完成第 ${i+1} 题`);
+          return;
+        }
+        const val = parseInt(answer.value);
+        if (val === questions[i].healthy) {
+          score++;
+        }
+        answers.push({q: questions[i].q, ans: questions[i].options[val]});
+      }
+
+      let report = `✅ 你的健康特质得分：${score} / ${questions.length}\n\n`;
+
+      if (score >= 7) {
+        report += "👉 说明：你表现出高度健康的人格特质，与 NPD 基本相反，可以放心。\n\n";
+      } else if (score >= 4) {
+        report += "👉 说明：你有一定的健康特质，但也伴随部分自恋倾向。建议保持觉察，适度调整。\n\n";
+      } else {
+        report += "👉 说明：你可能在人际、自尊上存在较多自恋性特征，若已影响生活或关系，建议寻求专业心理咨询。\n\n";
+      }
+
+      report += "📝 你的回答记录：\n";
+      answers.forEach((a, i) => {
+        report += `${i+1}. ${a.q}\n   → ${a.ans}\n`;
+      });
+
+      report += "\n⚠️ 提示：此结果仅供参考，不是临床诊断。若有困扰，请咨询专业心理医生或心理咨询师。";
+
+      document.getElementById("result").innerText = report;
+    }
+  </script>
+</body>
+</html>

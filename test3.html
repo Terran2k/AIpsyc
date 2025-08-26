@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>NPD 特质 vs 反向特质｜可视化图表</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- 可选：导出 PNG 用 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    :root{
+      --bg:#f6f7fb; --card:#ffffff; --text:#1f2937; --muted:#6b7280; --primary:#6366f1;
+      --pos:#10b981; --neg:#ef4444; --border:#e5e7eb; --chip:#eef2ff;
+    }
+    .dark{
+      --bg:#0b1020; --card:#10172a; --text:#e5e7eb; --muted:#9ca3af; --primary:#8b5cf6;
+      --pos:#22c55e; --neg:#f87171; --border:#1f2937; --chip:#1e293b;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; background:var(--bg); color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, "Microsoft YaHei", "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    header{
+      max-width:1100px; margin:24px auto 0; padding:0 16px 8px;
+      display:flex; gap:12px; align-items:center; justify-content:space-between;
+    }
+    .title{
+      display:flex; align-items:center; gap:12px;
+    }
+    .logo{
+      width:40px; height:40px; border-radius:12px; background:linear-gradient(135deg,var(--primary),#22c55e);
+      display:grid; place-items:center; color:white; font-weight:800; letter-spacing:0.5px;
+      box-shadow:0 8px 24px rgba(0,0,0,.15);
+    }
+    h1{font-size:20px; margin:0}
+    .sub{color:var(--muted); font-size:13px; margin-top:2px}
+    .toolbar{
+      display:flex; gap:8px; flex-wrap:wrap;
+    }
+    .btn{
+      background:var(--card); border:1px solid var(--border); color:var(--text);
+      padding:10px 14px; border-radius:12px; cursor:pointer; font-size:14px;
+      transition:.2s; box-shadow:0 4px 12px rgba(0,0,0,.06);
+    }
+    .btn:hover{ transform:translateY(-1px) }
+    .btn.primary{
+      background:var(--primary); color:#fff; border-color:transparent;
+      box-shadow:0 10px 22px rgba(99,102,241,.35);
+    }
+    .search{
+      display:flex; align-items:center; gap:8px; background:var(--card);
+      border:1px solid var(--border); border-radius:12px; padding:10px 12px; min-width:260px;
+      box-shadow:0 4px 12px rgba(0,0,0,.06);
+    }
+    .search input{
+      border:none; outline:none; background:transparent; color:var(--text); width:200px;
+      font-size:14px;
+    }
+    main{
+      max-width:1100px; margin:12px auto 32px; padding:0 16px;
+    }
+    .legend{
+      display:flex; gap:10px; color:var(--muted); font-size:13px; margin:12px 2px 18px;
+      flex-wrap:wrap;
+    }
+    .dot{ width:10px; height:10px; border-radius:50% }
+    .neg-dot{ background:var(--neg) } .pos-dot{ background:var(--pos) }
+    .grid{
+      display:grid; grid-template-columns:1fr 1fr; gap:16px;
+    }
+    @media (max-width:880px){
+      .grid{ grid-template-columns:1fr; }
+    }
+    .col{
+      background:var(--card); border:1px solid var(--border); border-radius:18px; padding:18px;
+      box-shadow:0 12px 28px rgba(0,0,0,.08);
+    }
+    .col h2{
+      margin:0 0 8px; font-size:18px; display:flex; align-items:center; gap:8px;
+    }
+    .hint{ font-size:12px; color:var(--muted); margin-bottom:10px }
+    .pair{
+      display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:stretch;
+      margin-bottom:12px;
+    }
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,0) );
+      border:1px solid var(--border); border-radius:14px; padding:14px; position:relative;
+      min-height:84px; display:flex; gap:10px;
+    }
+    .label{
+      font-weight:700; font-size:12px; letter-spacing:.4px; text-transform:uppercase;
+      opacity:.8; margin-bottom:6px; display:inline-flex; align-items:center; gap:6px;
+      padding:4px 8px; border-radius:999px; background:var(--chip); border:1px dashed var(--border);
+    }
+    .neg .label{ color:#fff; background:color-mix(in srgb, var(--neg) 15%, transparent); border-color:color-mix(in srgb, var(--neg) 40%, var(--border)); }
+    .pos .label{ color:#fff; background:color-mix(in srgb, var(--pos) 15%, transparent); border-color:color-mix(in srgb, var(--pos) 40%, var(--border)); }
+    .bullet{
+      margin:0; font-size:15px; line-height:1.5;
+    }
+    .badge{
+      position:absolute; top:10px; right:10px; font-size:11px; color:#fff; padding:4px 8px; border-radius:8px;
+    }
+    .neg .badge{ background:var(--neg) } .pos .badge{ background:var(--pos) }
+    footer{
+      max-width:1100px; margin:10px auto 36px; padding:0 16px; color:var(--muted); font-size:12px;
+    }
+    .divider{height:1px;background:var(--border);margin:14px 0}
+    .kv{
+      display:flex; align-items:center; gap:8px; font-size:12px; color:var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">
+      <div class="logo">NPD</div>
+      <div>
+        <h1>NPD 特质 vs 反向特质（彩色可视化）</h1>
+        <div class="sub">长期稳定的右侧特质，通常与 NPD 的核心机制相冲突，可<strong>基本排除</strong> NPD 倾向。</div>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.3-4.3M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <input id="q" placeholder="搜索关键词（如：同理心 / 批评 / 自尊）" />
+      </div>
+      <button class="btn" id="themeBtn">🌗 主题</button>
+      <button class="btn" id="printBtn">🖨️ 打印 / PDF</button>
+      <button class="btn primary" id="pngBtn">🖼️ 导出 PNG</button>
+    </div>
+  </header>
+
+  <main id="capture">
+    <div class="legend">
+      <div class="kv"><span class="dot neg-dot"></span> 典型 NPD 特质</div>
+      <div class="kv"><span class="dot pos-dot"></span> 反向特质（健康向）</div>
+    </div>
+
+    <div class="grid" id="grid">
+      <!-- 左列：NPD；右列：反向 -->
+      <div class="col">
+        <h2>典型 NPD 特质</h2>
+        <div class="hint">与右侧项目一一对应，便于对照理解。</div>
+        <div id="left"></div>
+      </div>
+      <div class="col">
+        <h2>反向特质（稳定存在时几乎可排除 NPD）</h2>
+        <div class="hint">这些特质与 NPD 核心动力（脆弱自尊、过度防御、缺乏共情）相冲突。</div>
+        <div id="right"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="divider"></div>
+    <div>说明：本图表用于科普与自我觉察，<b>不是临床诊断</b>。若困扰显著、持续影响生活与关系，请寻求专业心理帮助。</div>
+  </footer>
+
+  <script>
+    // 数据源：左=典型 NPD；右=反向特质（健康向）
+    const pairs = [
+      ["需要不断被赞美和关注来维持自尊", "自尊稳定，不依赖外界持续赞美，内心踏实"],
+      ["对批评过度敏感，容易愤怒或防御", "能平静接受批评，并把它作为成长机会"],
+      ["固执己见，很难承认错误", "乐于学习，能修正观点，甚至主动向别人请教"],
+      ["人际关系中倾向于利用他人", "注重互惠，愿意平等付出和接受支持"],
+      ["缺乏同理心，难以理解他人感受", "稳定的同理心，能自然共情并回应他人情绪"],
+      ["强烈特权感，认为自己应被特殊对待", "视自己与他人平等，不觉得自己“天生应得”更多"],
+      ["冲突中习惯贬低或攻击对方", "冲突后能主动认错、和解，重视关系修复"],
+      ["自我价值依赖外部成就或比较", "自我价值基于内心标准，而非外部竞争或攀比"]
+    ];
+
+    const leftEl = document.getElementById("left");
+    const rightEl = document.getElementById("right");
+    const gridEl = document.getElementById("grid");
+
+    function render(list){
+      leftEl.innerHTML = "";
+      rightEl.innerHTML = "";
+      list.forEach((p, idx)=>{
+        const [neg, pos] = p;
+        const L = document.createElement("div");
+        L.className = "pair";
+        L.innerHTML = `
+          <div class="card neg">
+            <div>
+              <div class="label">NPD 特质</div>
+              <p class="bullet">• ${highlight(neg)}</p >
+              <span class="badge">#${idx+1}</span>
+            </div>
+          </div>
+        `;
+        leftEl.appendChild(L);
+
+        const R = document.createElement("div");
+        R.className = "pair";
+        R.innerHTML = `
+          <div class="card pos">
+            <div>
+              <div class="label">反向特质</div>
+              <p class="bullet">• ${highlight(pos)}</p >
+              <span class="badge">#${idx+1}</span>
+            </div>
+          </div>
+        `;
+        rightEl.appendChild(R);
+      });
+    }
+
+    // 搜索高亮
+    function escapeRegExp(string) {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+    function highlight(text){
+      const q = document.getElementById("q").value.trim();
+      if(!q) return text;
+      try{
+        const re = new RegExp(escapeRegExp(q), "gi");
+        return text.replace(re, (m)=>`<mark style="background:color-mix(in srgb, var(--primary) 30%, transparent); color:inherit; padding:1px 3px; border-radius:4px">${m}</mark>`);
+      }catch{ return text; }
+    }
+
+    // 初始渲染
+    render(pairs);
+
+    // 搜索过滤
+    document.getElementById("q").addEventListener("input", (e)=>{
+      const key = e.target.value.trim().toLowerCase();
+      const filtered = pairs.filter(([a,b]) => a.toLowerCase().includes(key) || b.toLowerCase().includes(key));
+      render(filtered);
+    });
+
+    // 主题切换
+    const themeBtn = document.getElementById("themeBtn");
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if(prefersDark) document.documentElement.classList.add("dark");
+    themeBtn.addEventListener("click", ()=>{
+      document.documentElement.classList.toggle("dark");
+    });
+
+    // 打印 / 导出 PDF（浏览器自带打印另存为 PDF）
+    document.getElementById("printBtn").addEventListener("click", ()=>window.print());
+
+    // 导出 PNG
+    document.getElementById("pngBtn").addEventListener("click", async ()=>{
+      const node = document.getElementById("capture");
+      const canvas = await html2canvas(node, {backgroundColor: null, scale: 2});
+      const url = canvas.toDataURL("image/png");
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "NPD_特质对照图.png";
+      a.click();
+    });
+  </script>
+</body>
+</html>
