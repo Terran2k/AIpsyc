@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>心理学研究中心 - 探索人类心智的奥秘</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="心理学研究中心提供最新心理学研究、测试工具和资源，帮助您了解人类行为和心理健康。" />
+  <meta name="keywords" content="心理学研究,人格测试,心理健康,认知心理学,行为心理学" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --secondary: #22c55e;
+      --secondary-dark: #16a34a;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --light: #f8fafc;
+      --dark: #0f172a;
+      --gray: #64748b;
+      --bg-light: #f1f5f9;
+      --bg-dark: #0f172a;
+      --text-light: #1e293b;
+      --text-dark: #e2e8f0;
+      --border-light: #e2e8f0;
+      --border-dark: #334155;
+      --card-light: #ffffff;
+      --card-dark: #1e293b;
+      --shadow-light: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-dark: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+      --font-sans: ui-sans-serif, system-ui, -apple-system, "Microsoft YaHei", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .light {
+      --bg: var(--bg-light);
+      --text: var(--text-light);
+      --border: var(--border-light);
+      --card: var(--card-light);
+      --shadow: var(--shadow-light);
+    }
+
+    .dark {
+      --bg: var(--bg-dark);
+      --text: var(--text-dark);
+      --border: var(--border-dark);
+      --card: var(--card-dark);
+      --shadow: var(--shadow-dark);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* 导航栏 */
+    .navbar {
+      background-color: var(--card);
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .navbar-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--primary);
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-link {
+      color: var(--text);
+      font-weight: 500;
+      padding: 5px 10px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .nav-link:hover {
+      background-color: rgba(99, 102, 241, 0.1);
+      text-decoration: none;
+    }
+
+    .nav-link.active {
+      color: var(--primary);
+      background-color: rgba(99, 102, 241, 0.1);
+    }
+
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .theme-toggle:hover {
+      background-color: rgba(99, 102, 241, 0.1);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* 英雄区 */
+    .hero {
+      padding: 120px 20px;
+      text-align: center;
+      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1507413245164-6160d8298b31?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      color: white;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      animation: fadeInDown 1s ease-out;
+    }
+
+    .hero p {
+      font-size: 1.3rem;
+      max-width: 800px;
+      margin: 0 auto 30px;
+      color: rgba(255, 255, 255, 0.9);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+      animation: fadeInUp 1s ease-out;
+    }
+    
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 28px;
+      background-color: var(--primary);
+      color: white;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      animation: fadeIn 1.2s ease-out;
+    }
+
+    .btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      text-decoration: none;
+    }
+    
+    .btn:active {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      color: white;
+      border: 2px solid white;
+      margin-left: 15px;
+    }
+
+    .btn-secondary:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+    
+    .hero .btn {
+      margin-top: 10px;
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* 特色区域 */
+    .features {
+      padding: 80px 0;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 50px;
+      font-size: 2rem;
+      color: var(--primary);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .feature-card {
+      background-color: var(--card);
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s;
+      border: 1px solid var(--border);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+
+    .feature-title {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+    }
+
+    .feature-description {
+      color: var(--gray);
+    }
+
+    /* 研究领域 */
+    .research-areas {
+      padding: 80px 0;
+      background-color: rgba(99, 102, 241, 0.05);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .research-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .research-card {
+      background-color: var(--card);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s;
+      border: 1px solid var(--border);
+    }
+
+    .research-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .research-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .research-content {
+      padding: 20px;
+    }
+
+    .research-title {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+    }
+
+    .research-description {
+      color: var(--gray);
+      margin-bottom: 15px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 5px 10px;
+      background-color: rgba(99, 102, 241, 0.1);
+      color: var(--primary);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      margin-right: 5px;
+      margin-bottom: 5px;
+    }
+
+    /* 测试工具 */
+    .tests {
+      padding: 80px 0;
+    }
+
+    .tests-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .test-card {
+      background-color: var(--card);
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .test-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .test-icon {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+
+    .test-title {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+    }
+
+    .test-description {
+      color: var(--gray);
+      margin-bottom: 20px;
+      flex-grow: 1;
+    }
+
+    .test-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--gray);
+      font-size: 0.9rem;
+      margin-top: auto;
+    }
+
+    .test-time {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .test-questions {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* 统计数据 */
+    .stats {
+      padding: 80px 0;
+      background-color: rgba(99, 102, 241, 0.05);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+      margin-top: 50px;
+    }
+
+    .stat-item {
+      padding: 20px;
+    }
+
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    .stat-label {
+      color: var(--gray);
+      font-size: 1.1rem;
+    }
+
+    /* 最新研究 */
+    .latest-research {
+      padding: 80px 0;
+    }
+
+    .research-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .research-item {
+      background-color: var(--card);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s;
+      border: 1px solid var(--border);
+    }
+
+    .research-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .research-item-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .research-item-content {
+      padding: 20px;
+    }
+
+    .research-item-title {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+    }
+
+    .research-item-meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--gray);
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+    }
+
+    .research-item-description {
+      color: var(--gray);
+      margin-bottom: 15px;
+    }
+
+    /* 订阅区域 */
+  .subscribe {
+    padding: 80px 0;
+    background-color: rgba(99, 102, 241, 0.1);
+    text-align: center;
+    border-top: 1px solid var(--border);
+  }
+
+  .subscribe-form {
+    max-width: 500px;
+    margin: 30px auto 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .form-group {
+    position: relative;
+    width: 100%;
+  }
+
+  .subscribe-input {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: var(--card);
+    color: var(--text);
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  
+  .subscribe-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+    outline: none;
+  }
+  
+  .floating-label {
+    position: absolute;
+    left: 15px;
+    top: 15px;
+    color: var(--gray);
+    pointer-events: none;
+    transition: transform 0.3s, font-size 0.3s, color 0.3s;
+  }
+  
+  .subscribe-input:focus + .floating-label,
+  .subscribe-input:not(:placeholder-shown) + .floating-label {
+    transform: translateY(-2rem);
+    font-size: 0.75rem;
+    color: var(--primary);
+  }
+  
+  .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    text-align: left;
+  }
+  
+  .checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary);
+  }
+  
+  .checkbox-group label {
+    font-size: 0.9rem;
+    color: var(--gray);
+  }
+
+  .subscribe-btn {
+    padding: 15px 25px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  .subscribe-btn:hover {
+    background-color: var(--primary-dark);
+  }
+  
+  .btn-loading {
+    position: absolute;
+  }
+  
+  .spinning {
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+    /* 页脚 */
+    .footer {
+      background-color: var(--card);
+      border-top: 1px solid var(--border);
+      padding: 50px 0 20px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .footer-col h3 {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+
+    .footer-links {
+      list-style: none;
+    }
+
+    .footer-link {
+      margin-bottom: 10px;
+    }
+
+    .footer-link a {
+      color: var(--gray);
+      transition: color 0.3s;
+    }
+
+    .footer-link a:hover {
+      color: var(--primary);
+    }
+
+    .social-links {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .social-link {
+      color: var(--gray);
+      font-size: 1.5rem;
+      transition: color 0.3s;
+    }
+
+    .social-link:hover {
+      color: var(--primary);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      color: var(--gray);
+      font-size: 0.9rem;
+    }
+
+    /* 图表容器 */
+    .chart-container {
+      background-color: var(--card);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-top: 30px;
+      border: 1px solid var(--border);
+    }
+
+    /* 响应式设计 */
+/* 表单错误样式 */
+.form-error {
+  color: #e53e3e;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  position: absolute;
+  left: 0;
+  bottom: -1.2rem;
+}
+
+.input-error {
+  border-color: #e53e3e !important;
+  box-shadow: 0 0 0 1px rgba(229, 62, 62, 0.2) !important;
+}
+
+/* 震动动画 */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* 成功动画 */
+.success-animation {
+  background-color: var(--secondary) !important;
+  transition: background-color 0.3s;
+}
+
+/* 滑动卡片容器 */
+.swipe-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* 提供iOS设备上的平滑滚动 */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  padding-bottom: 15px;
+  margin-bottom: -15px;
+}
+
+.swipe-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* 滑动指示器 */
+.swipe-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.swipe-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--border);
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.swipe-dot.active {
+  background-color: var(--primary);
+  transform: scale(1.3);
+}
+
+@media (max-width: 768px) {
+  /* 移动端滑动卡片 */
+  .research-grid, .tests-grid, .research-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 0 20px;
+  }
+  
+  .research-grid::-webkit-scrollbar, 
+  .tests-grid::-webkit-scrollbar, 
+  .research-list::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .research-card, .test-card, .research-item {
+    width: 100%;
+  }
+  
+      .navbar-container {
+        flex-wrap: wrap;
+      }
+
+      .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        margin-top: 20px;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+      }
+
+      .nav-links.active {
+        display: flex;
+        opacity: 1;
+        transform: translateY(0);
+      }
+      
+      .nav-links a {
+        padding: 0.5rem 1rem;
+        width: 90%;
+        text-align: center;
+        border-radius: 4px;
+        transition: background-color 0.2s ease;
+      }
+      
+      .nav-links a:active {
+        background-color: rgba(99, 102, 241, 0.2);
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+      
+      /* 防止菜单打开时页面滚动 */
+      body.menu-open {
+        overflow: hidden;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .hero p {
+        font-size: 1rem;
+      }
+
+      .btn {
+        padding: 10px 20px;
+      }
+
+      .section-title {
+        font-size: 1.8rem;
+      }
+
+      .stat-number {
+        font-size: 2.5rem;
+      }
+
+      .subscribe-form {
+        flex-direction: column;
+      }
+
+      .subscribe-input {
+        border-radius: 8px;
+        margin-bottom: 10px;
+      }
+
+      .subscribe-btn {
+        border-radius: 8px;
+      }
+    }
+
+    /* 动画 */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fade-in {
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    /* 提示框样式 */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+    
+    /* 波纹效果 */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.3);
+      transform: scale(0);
+      animation: ripple 0.6s linear;
+      pointer-events: none;
+    }
+    
+    @keyframes ripple {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+    
+    .research-card, .test-card, .research-item, .btn {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    /* 回到顶部按钮 */
+    .back-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 99;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    
+    .back-to-top.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .back-to-top:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .back-to-top:active {
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+<body class="light">
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="logo">
+        <div class="logo-icon">Ψ</div>
+        <span>心理学研究中心</span>
+      </div>
+      <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class="bi bi-list"></i>
+      </button>
+      <div class="nav-links" id="navLinks">
+        <a href="#" class="nav-link active">首页</a>
+        <a href="#research-areas" class="nav-link">研究领域</a>
+        <a href="#tests" class="nav-link">心理测试</a>
+        <a href="#latest-research" class="nav-link">最新研究</a>
+        <a href="#" class="nav-link">资源库</a>
+        <a href="#" class="nav-link">关于我们</a>
+      </div>
+      <button class="theme-toggle" id="themeToggle">
+        <i class="bi bi-moon"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- 英雄区 -->
+  <section class="hero">
+    <div class="container">
+      <h1>探索人类心智的奥秘</h1>
+      <p>心理学研究中心致力于通过科学方法研究人类行为和心理过程，提供专业的心理测试工具和研究资源，帮助您更好地了解自己和他人。</p>
+      <a href="#tests" class="btn" ontouchstart="addRippleEffect(event)">开始测试</a>
+      <a href="#research-areas" class="btn btn-secondary" ontouchstart="addRippleEffect(event)">了解更多</a>
+    </div>
+  </section>
+
+  <!-- 特色区域 -->
+  <section class="features">
+    <div class="container">
+      <h2 class="section-title">我们的特色</h2>
+      <div class="features-grid">
+        <div class="feature-card animate-fade-in">
+          <div class="feature-icon">
+            <i class="bi bi-graph-up"></i>
+          </div>
+          <h3 class="feature-title">科学的研究方法</h3>
+          <p class="feature-description">采用严谨的科学方法和统计分析，确保研究结果的可靠性和有效性，为心理学研究提供坚实的基础。</p>
+        </div>
+        <div class="feature-card animate-fade-in">
+          <div class="feature-icon">
+            <i class="bi bi-clipboard-data"></i>
+          </div>
+          <h3 class="feature-title">专业的测试工具</h3>
+          <p class="feature-description">提供经过验证的心理测试工具，帮助您了解自己的人格特质、情绪状态和认知能力，为个人发展提供指导。</p>
+        </div>
+        <div class="feature-card animate-fade-in">
+          <div class="feature-icon">
+            <i class="bi bi-people"></i>
+          </div>
+          <h3 class="feature-title">多元的研究视角</h3>
+          <p class="feature-description">融合认知、行为、社会和临床等多个心理学分支的研究成果，提供全面的心理学知识和见解。</p>
+        </div>
+        </div>
+      </div>
+      <div class="swipe-indicator" id="areasSwipeIndicator"></div>
+    </div>
+  </section>
+
+  <!-- 研究领域 -->
+  <section class="research-areas" id="research-areas">
+    <div class="container">
+      <h2 class="section-title">研究领域</h2>
+      <div class="swipe-container">
+        <div class="research-grid">
+        <div class="research-card" ontouchstart="addRippleEffect(event)">
+          <img src="https://images.unsplash.com/photo-1507413245164-6160d8298b31?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="认知心理学" class="research-img">
+          <div class="research-content">
+            <h3 class="research-title">认知心理学</h3>
+            <p class="research-description">研究人类如何获取、处理和存储信息，包括注意力、记忆、语言、思维和问题解决等认知过程。</p>
+            <div>
+              <span class="tag">记忆</span>
+              <span class="tag">注意力</span>
+              <span class="tag">决策</span>
+            </div>
+          </div>
+        </div>
+        <div class="research-card">
+          <img src="https://images.unsplash.com/photo-1573497620053-ea5300f94f21?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="人格心理学" class="research-img">
+          <div class="research-content">
+            <h3 class="research-title">人格心理学</h3>
+            <p class="research-description">探索人格特质的形成、发展和影响因素，研究个体差异和人格类型，以及人格与行为的关系。</p>
+            <div>
+              <span class="tag">人格特质</span>
+              <span class="tag">个体差异</span>
+              <span class="tag">人格测试</span>
+            </div>
+          </div>
+        </div>
+        <div class="research-card">
+          <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1176&q=80" alt="社会心理学" class="research-img">
+          <div class="research-content">
+            <h3 class="research-title">社会心理学</h3>
+            <p class="research-description">研究社会环境对个体行为和思想的影响，包括社会认知、态度形成、群体行为和人际关系等。</p>
+            <div>
+              <span class="tag">社会影响</span>
+              <span class="tag">群体行为</span>
+              <span class="tag">态度改变</span>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+      <div class="swipe-indicator" id="toolsSwipeIndicator"></div>
+    </div>
+  </section>
+
+  <!-- 测试工具 -->
+  <section class="tests" id="tests">
+    <div class="container">
+      <h2 class="section-title">心理测试工具</h2>
+      <div class="swipe-container">
+        <div class="tests-grid">
+        <div class="test-card" onclick="window.location.href='test1.html'" ontouchstart="addRippleEffect(event)">
+          <div class="test-icon">
+            <i class="bi bi-person-badge"></i>
+          </div>
+          <h3 class="test-title">自恋人格量表NPI-16</h3>
+          <p class="test-description">NPD心理学研究中常用的自恋人格量表，用于自测量自恋特质倾向，帮助识别潜在的心理健康问题。</p>
+          <div class="test-meta">
+            <div class="test-time">
+              <i class="bi bi-clock"></i> 15分钟
+            </div>
+            <div class="test-questions">
+              <i class="bi bi-list-check"></i> 60题
+            </div>
+          </div>
+          <a href="test1.html" class="btn" style="width: 100%; margin-top: 20px;" ontouchstart="addRippleEffect(event)">开始测试</a>
+        </div>
+        <div class="test-card" onclick="window.location.href='test2.html'" ontouchstart="addRippleEffect(event)">
+          <div class="test-icon">
+            <i class="bi bi-emoji-smile"></i>
+          </div>
+          <h3 class="test-title">NPD自查清单</h3>
+          <p class="test-description">长期稳定的行为模式才有意义，不是偶尔的表现，帮助识别潜在的心理健康问题。</p>
+          <div class="test-meta">
+            <div class="test-time">
+              <i class="bi bi-clock"></i> 20分钟
+            </div>
+            <div class="test-questions">
+              <i class="bi bi-list-check"></i> 50题
+            </div>
+          </div>
+          <a href="test2.html" class="btn" style="width: 100%; margin-top: 20px;" ontouchstart="addRippleEffect(event)">开始测试</a>
+        </div>
+        <div class="test-card" onclick="window.location.href='test3.html'" ontouchstart="addRippleEffect(event)">
+          <div class="test-icon">
+            <i class="bi bi-shield-check"></i>
+          </div>
+          <h3 class="test-title">NPD特质与NPD反向特质对照</h3>
+          <p class="test-description">左侧是典型的NPD特质，右侧是NPD反向特质，帮助排除潜在的心理健康问题。</p>
+          <div class="test-meta">
+            <div class="test-time">
+              <i class="bi bi-clock"></i> 10分钟
+            </div>
+            <div class="test-questions">
+              <i class="bi bi-list-check"></i> 30题
+            </div>
+          </div>
+          <a href="test3.html" class="btn" style="width: 100%; margin-top: 20px;">开始测试</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 统计数据 -->
+  <section class="stats">
+    <div class="container">
+      <h2 class="section-title">研究数据</h2>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number">10,000+</div>
+          <div class="stat-label">测试参与者</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">50+</div>
+          <div class="stat-label">研究项目</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">25+</div>
+          <div class="stat-label">专业测试工具</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">100+</div>
+          <div class="stat-label">研究论文</div>
+        </div>
+      </div>
+      <div class="chart-container">
+        <canvas id="researchChart"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- 最新研究 -->
+  <section class="latest-research" id="latest-research">
+    <div class="container">
+      <h2 class="section-title">最新研究成果</h2>
+      <div class="research-list">
+        <div class="research-item" ontouchstart="addRippleEffect(event)">
+          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="社交媒体与心理健康" class="research-item-img">
+          <div class="research-item-content">
+            <h3 class="research-item-title">社交媒体使用与青少年心理健康的关系</h3>
+            <div class="research-item-meta">
+              <span>2023年10月15日</span>
+              <span>心理健康研究组</span>
+            </div>
+            <p class="research-item-description">本研究探讨了社交媒体使用频率、方式与青少年焦虑、抑郁和自尊水平的关系，并提出了健康使用社交媒体的建议。</p>
+            <a href="#" class="btn" ontouchstart="addRippleEffect(event)">阅读更多</a>
+          </div>
+        </div>
+        <div class="research-item" ontouchstart="addRippleEffect(event)">
+          <img src="https://images.unsplash.com/photo-1516534775068-ba3e7458af70?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="正念冥想" class="research-item-img">
+          <div class="research-item-content">
+            <h3 class="research-item-title">正念冥想对工作压力和情绪调节的影响</h3>
+            <div class="research-item-meta">
+              <span>2023年9月28日</span>
+              <span>认知与情绪研究组</span>
+            </div>
+            <p class="research-item-description">本研究通过为期8周的正念冥想干预，考察了其对职场人士工作压力、情绪调节能力和工作满意度的影响。</p>
+            <a href="#" class="btn" ontouchstart="addRippleEffect(event)">阅读更多</a>
+          </div>
+        </div>
+        <div class="research-item" ontouchstart="addRippleEffect(event)">
+          <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="人格特质与职业成功" class="research-item-img">
+          <div class="research-item-content">
+            <h3 class="research-item-title">人格特质与职业成功：纵向研究</h3>
+            <div class="research-item-meta">
+              <span>2023年8月12日</span>
+              <span>人格与职业研究组</span>
+            </div>
+            <p class="research-item-description">这项为期10年的纵向研究探讨了大五人格特质如何预测职业成功，包括收入水平、职位晋升和工作满意度等指标。</p>
+            <a href="#" class="btn" ontouchstart="addRippleEffect(event)">阅读更多</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 订阅区域 -->
+  <section class="subscribe">
+    <div class="container">
+      <h2 class="section-title">订阅研究简报</h2>
+      <p>定期获取最新的心理学研究成果、测试工具和专业资源</p>
+      <form class="subscribe-form" id="subscribeForm">
+        <div class="form-group">
+          <input type="email" id="emailInput" class="subscribe-input" placeholder="请输入您的邮箱地址" required>
+          <label for="emailInput" class="floating-label">请输入您的邮箱地址</label>
+        </div>
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="agreeTerms" required>
+          <label for="agreeTerms">我同意接收研究简报和相关资讯</label>
+        </div>
+        <button type="submit" class="subscribe-btn">
+          <span class="btn-text">订阅</span>
+          <span class="btn-loading" style="display: none;">
+            <i class="bi bi-arrow-repeat spinning"></i>
+          </span>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3>心理学研究中心</h3>
+          <p>致力于通过科学方法研究人类行为和心理过程，提供专业的心理测试工具和研究资源。</p>
+          <div class="social-links">
+            <a href="#" class="social-link"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="social-link"><i class="bi bi-twitter"></i></a>
+            <a href="#" class="social-link"><i class="bi bi-linkedin"></i></a>
+            <a href="#" class="social-link"><i class="bi bi-instagram"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h3>快速链接</h3>
+          <ul class="footer-links">
+            <li class="footer-link"><a href="#">首页</a></li>
+            <li class="footer-link"><a href="#research-areas">研究领域</a></li>
+            <li class="footer-link"><a href="#tests">心理测试</a></li>
+            <li class="footer-link"><a href="#latest-research">最新研究</a></li>
+            <li class="footer-link"><a href="#">资源库</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>资源</h3>
+          <ul class="footer-links">
+            <li class="footer-link"><a href="#">研究论文</a></li>
+            <li class="footer-link"><a href="#">测试工具</a></li>
+            <li class="footer-link"><a href="#">心理健康资源</a></li>
+            <li class="footer-link"><a href="#">学术合作</a></li>
+            <li class="footer-link"><a href="#">常见问题</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>联系我们</h3>
+          <ul class="footer-links">
+            <li class="footer-link"><i class="bi bi-geo-alt"></i> 厦门市</li>
+            <li class="footer-link"><i class="bi bi-envelope"></i> contact@psychresearch.com</li>
+            <li class="footer-link"><i class="bi bi-telephone"></i> +86 10 1234 5678</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2023 心理学研究中心 版权所有 | 本网站仅供学习和研究使用，不提供医疗建议</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 提示框 -->
+  <div id="toast" class="toast"></div>
+  
+  <!-- 回到顶部按钮 -->
+  <button id="backToTop" class="back-to-top" aria-label="回到顶部">
+    <i class="bi bi-arrow-up"></i>
+  </button>
+
+  <script>
+    // 主题切换
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    const icon = themeToggle.querySelector('i');
+
+    // 检查本地存储中的主题设置
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      body.className = savedTheme;
+      updateThemeIcon();
+    } else {
+      // 检查系统主题偏好
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (prefersDark) {
+        body.classList.add('dark');
+        updateThemeIcon();
+      }
+    }
+
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark');
+      body.classList.toggle('light');
+      updateThemeIcon();
+      // 保存主题设置到本地存储
+      localStorage.setItem('theme', body.className);
+    });
+
+    function updateThemeIcon() {
+      if (body.classList.contains('dark')) {
+        icon.className = 'bi bi-sun';
+      } else {
+        icon.className = 'bi bi-moon';
+      }
+    }
+
+    // 移动端菜单增强
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.getElementById('navLinks');
+    const navLinksItems = document.querySelectorAll('#navLinks a');
+    
+    // 点击菜单按钮切换菜单显示状态
+    mobileMenuBtn.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      document.body.classList.toggle('menu-open'); // 防止菜单打开时页面滚动
+    });
+    
+    // 点击菜单项自动关闭菜单
+    navLinksItems.forEach(item => {
+      item.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          navLinks.classList.remove('active');
+          document.body.classList.remove('menu-open');
+        }
+      });
+    });
+    
+    // 点击页面其他区域关闭菜单
+    document.addEventListener('click', (e) => {
+      if (window.innerWidth <= 768 && 
+          navLinks.classList.contains('active') && 
+          !navLinks.contains(e.target) && 
+          !mobileMenuBtn.contains(e.target)) {
+        navLinks.classList.remove('active');
+        document.body.classList.remove('menu-open');
+      }
+    });
+
+    // 导航链接平滑滚动
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 70,
+            behavior: 'smooth'
+          });
+          
+          // 关闭移动端菜单
+          navLinks.classList.remove('active');
+        }
+      });
+    });
+
+    // 订阅表单提交增强
+    const subscribeForm = document.getElementById('subscribeForm');
+    const emailInput = document.getElementById('emailInput');
+    const submitBtn = subscribeForm.querySelector('button[type="submit"]');
+    const btnText = submitBtn.querySelector('.btn-text');
+    const btnLoading = submitBtn.querySelector('.btn-loading');
+    
+    // 表单验证
+    function validateEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(email);
+    }
+    
+    // 显示表单错误
+    function showFormError(input, message) {
+      // 移除之前的错误消息
+      const existingError = input.parentElement.querySelector('.form-error');
+      if (existingError) {
+        existingError.remove();
+      }
+      
+      // 创建并添加新的错误消息
+      const errorElement = document.createElement('div');
+      errorElement.className = 'form-error';
+      errorElement.textContent = message;
+      input.parentElement.appendChild(errorElement);
+      
+      // 添加错误样式
+      input.classList.add('input-error');
+      
+      // 震动效果
+      input.style.animation = 'shake 0.5s';
+      setTimeout(() => {
+        input.style.animation = '';
+      }, 500);
+    }
+    
+    // 移除表单错误
+    function removeFormError(input) {
+      const existingError = input.parentElement.querySelector('.form-error');
+      if (existingError) {
+        existingError.remove();
+      }
+      input.classList.remove('input-error');
+    }
+    
+    // 表单提交处理
+    subscribeForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = emailInput.value.trim();
+      const agreeTerms = document.getElementById('agreeTerms').checked;
+      
+      // 验证邮箱
+      if (!validateEmail(email)) {
+        showFormError(emailInput, '请输入有效的邮箱地址');
+        return;
+      } else {
+        removeFormError(emailInput);
+      }
+      
+      // 验证条款同意
+      if (!agreeTerms) {
+        showToast('请同意接收研究简报');
+        return;
+      }
+      
+      // 显示加载状态
+      btnText.style.display = 'none';
+      btnLoading.style.display = 'block';
+      submitBtn.disabled = true;
+      
+      // 模拟API请求延迟
+      setTimeout(() => {
+        // 这里可以添加实际的表单提交逻辑
+        showToast(`感谢订阅！我们将定期发送研究简报到 ${email}`);
+        
+        // 重置表单和按钮状态
+        this.reset();
+        btnText.style.display = 'block';
+        btnLoading.style.display = 'none';
+        submitBtn.disabled = false;
+        
+        // 添加成功动画
+        submitBtn.classList.add('success-animation');
+        setTimeout(() => {
+          submitBtn.classList.remove('success-animation');
+        }, 1000);
+      }, 1500);
+    });
+    
+    // 输入时移除错误
+    emailInput.addEventListener('input', function() {
+      if (this.classList.contains('input-error')) {
+        removeFormError(this);
+      }
+    });
+
+    // 显示提示消息
+    function showToast(message, duration = 3000) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, duration);
+    }
+
+    // 研究数据图表
+    const ctx = document.getElementById('researchChart').getContext('2d');
+    
+    // 检测是否为移动设备
+    const isMobile = window.innerWidth <= 768;
+    
+    const researchChart = new Chart(ctx, {
+      type: 'bar', // Chart.js v3不再支持horizontalBar，改用bar配合indexAxis
+      data: {
+        labels: ['认知心理学', '人格心理学', '社会心理学', '发展心理学', '临床心理学'],
+        datasets: [{
+          label: '已完成研究项目',
+          data: [12, 15, 8, 7, 10],
+          backgroundColor: 'rgba(99, 102, 241, 0.6)',
+          borderColor: 'rgba(99, 102, 241, 1)',
+          borderWidth: 1
+        }, {
+          label: '进行中研究项目',
+          data: [5, 3, 6, 4, 2],
+          backgroundColor: 'rgba(34, 197, 94, 0.6)',
+          borderColor: 'rgba(34, 197, 94, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        indexAxis: isMobile ? 'y' : 'x', // 在移动端使用水平条形图
+        responsive: true,
+        maintainAspectRatio: false, // 允许图表高度自适应
+        plugins: {
+          legend: {
+            position: isMobile ? 'bottom' : 'top', // 在移动端将图例放在底部
+            labels: {
+              boxWidth: isMobile ? 12 : 40, // 移动端减小图例标记大小
+              padding: isMobile ? 10 : 15, // 移动端减小图例间距
+              color: getComputedStyle(document.documentElement).getPropertyValue('--text')
+            }
+          },
+          title: {
+            display: true,
+            text: '各研究领域项目数量',
+            color: getComputedStyle(document.documentElement).getPropertyValue('--text'),
+            font: {
+              size: isMobile ? 14 : 16 // 移动端减小标题字体大小
+            },
+            padding: {
+              bottom: isMobile ? 10 : 20 // 移动端减小标题底部间距
+            }
+          },
+          tooltip: {
+            callbacks: {
+              // 自定义提示框内容
+              label: function(context) {
+                return context.dataset.label + ': ' + context.raw + ' 个项目';
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: getComputedStyle(document.documentElement).getPropertyValue('--text'),
+              font: {
+                size: isMobile ? 10 : 12 // 移动端减小刻度字体大小
+              },
+              maxRotation: isMobile ? 45 : 0 // 移动端旋转标签以节省空间
+            },
+            grid: {
+              color: getComputedStyle(document.documentElement).getPropertyValue('--border'),
+              display: !isMobile // 移动端隐藏网格线以减少视觉干扰
+            }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: getComputedStyle(document.documentElement).getPropertyValue('--text'),
+              font: {
+                size: isMobile ? 10 : 12 // 移动端减小刻度字体大小
+              }
+            },
+            grid: {
+              color: getComputedStyle(document.documentElement).getPropertyValue('--border'),
+              display: !isMobile // 移动端隐藏网格线以减少视觉干扰
+            }
+          }
+        }
+      }
+    });
+
+    // 主题变化时更新图表颜色
+    themeToggle.addEventListener('click', () => {
+      updateChartColors();
+    });
+
+    function updateChartColors() {
+      const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text');
+      const borderColor = getComputedStyle(document.documentElement).getPropertyValue('--border');
+      
+      researchChart.options.plugins.legend.labels.color = textColor;
+      researchChart.options.plugins.title.color = textColor;
+      researchChart.options.scales.x.ticks.color = textColor;
+      researchChart.options.scales.y.ticks.color = textColor;
+      researchChart.options.scales.x.grid.color = borderColor;
+      researchChart.options.scales.y.grid.color = borderColor;
+      
+      researchChart.update();
+    }
+
+    // 动画效果
+    const animateElements = document.querySelectorAll('.animate-fade-in');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = 1;
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    animateElements.forEach(element => {
+      element.style.opacity = 0;
+      element.style.transform = 'translateY(20px)';
+      element.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+      observer.observe(element);
+    });
+    
+    // 回到顶部按钮
+    const backToTopBtn = document.getElementById('backToTop');
+    
+    // 监听滚动事件，显示/隐藏回到顶部按钮
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        backToTopBtn.classList.add('visible');
+      } else {
+        backToTopBtn.classList.remove('visible');
+      }
+    });
+    
+    // 点击回到顶部按钮
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+    
+    // 添加触摸滑动支持
+    let touchStartY = 0;
+    let touchEndY = 0;
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    // 监听触摸开始事件
+    document.addEventListener('touchstart', (e) => {
+      touchStartY = e.changedTouches[0].screenY;
+      touchStartX = e.changedTouches[0].screenX;
+    }, {passive: true});
+    
+    // 监听触摸结束事件
+    document.addEventListener('touchend', (e) => {
+      touchEndY = e.changedTouches[0].screenY;
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, {passive: true});
+    
+    // 处理滑动手势
+    function handleSwipe() {
+      const swipeDistanceY = touchEndY - touchStartY;
+      const swipeDistanceX = touchEndX - touchStartX;
+      const thresholdY = 100; // 垂直滑动阈值
+      const thresholdX = 50; // 水平滑动阈值
+      
+      // 向下滑动且在页面顶部附近，刷新页面内容
+      if (swipeDistanceY > thresholdY && window.scrollY < 50) {
+        showToast('页面已刷新');
+        // 这里可以添加实际的刷新逻辑，如重新加载数据等
+      }
+      
+      // 处理左右滑动导航
+      if (Math.abs(swipeDistanceX) > thresholdX && Math.abs(swipeDistanceY) < thresholdY) {
+        // 左滑：前进到下一部分
+        if (swipeDistanceX < 0) {
+          navigateToNextSection();
+        }
+        // 右滑：返回到上一部分
+        else {
+          navigateToPrevSection();
+        }
+      }
+    }
+    
+    // 导航到下一部分
+    function navigateToNextSection() {
+      const sections = ['hero', 'features', 'research-areas', 'tests', 'stats', 'latest-research', 'subscribe'];
+      const currentPosition = window.scrollY + 100;
+      
+      for (let i = 0; i < sections.length; i++) {
+        const section = document.getElementById(sections[i]);
+        if (section && section.offsetTop > currentPosition) {
+          window.scrollTo({
+            top: section.offsetTop - 70,
+            behavior: 'smooth'
+          });
+          return;
+        }
+      }
+    }
+    
+    // 导航到上一部分
+    function navigateToPrevSection() {
+      const sections = ['hero', 'features', 'research-areas', 'tests', 'stats', 'latest-research', 'subscribe'];
+      const currentPosition = window.scrollY;
+      
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const section = document.getElementById(sections[i]);
+        if (section && section.offsetTop < currentPosition - 100) {
+          window.scrollTo({
+            top: section.offsetTop - 70,
+            behavior: 'smooth'
+          });
+          return;
+        }
+      }
+    }
+    
+    // 添加波纹效果
+    function addRippleEffect(event) {
+      const target = event.currentTarget;
+      const rect = target.getBoundingClientRect();
+      const x = event.touches[0].clientX - rect.left;
+      const y = event.touches[0].clientY - rect.top;
+      
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      ripple.style.left = `${x}px`;
+      ripple.style.top = `${y}px`;
+      
+      target.appendChild(ripple);
+      
+      setTimeout(() => {
+        ripple.remove();
+      }, 600);
+    }
+    
+    // 创建滑动指示器
+    function createSwipeIndicators() {
+      // 研究领域滑动指示器
+      const areasGrid = document.querySelector('.research-grid');
+      const areasCards = areasGrid ? areasGrid.querySelectorAll('.research-card') : [];
+      const areasIndicator = document.getElementById('areasSwipeIndicator');
+      
+      // 测试工具滑动指示器
+      const toolsGrid = document.querySelector('.tests-grid');
+      const toolsCards = toolsGrid ? toolsGrid.querySelectorAll('.test-card') : [];
+      const toolsIndicator = document.getElementById('toolsSwipeIndicator');
+      
+      // 创建研究领域指示器点
+      if (areasIndicator && areasCards.length > 0) {
+        for (let i = 0; i < areasCards.length; i++) {
+          const dot = document.createElement('div');
+          dot.className = 'swipe-dot';
+          if (i === 0) dot.classList.add('active');
+          areasIndicator.appendChild(dot);
+        }
+      }
+      
+      // 创建测试工具指示器点
+      if (toolsIndicator && toolsCards.length > 0) {
+        for (let i = 0; i < toolsCards.length; i++) {
+          const dot = document.createElement('div');
+          dot.className = 'swipe-dot';
+          if (i === 0) dot.classList.add('active');
+          toolsIndicator.appendChild(dot);
+        }
+      }
+      
+      // 监听研究领域滚动
+      if (areasGrid && areasIndicator && areasCards.length > 0) {
+        areasGrid.addEventListener('scroll', () => {
+          updateSwipeIndicator(areasGrid, areasCards, areasIndicator);
+        }, {passive: true});
+      }
+      
+      // 监听测试工具滚动
+      if (toolsGrid && toolsIndicator && toolsCards.length > 0) {
+        toolsGrid.addEventListener('scroll', () => {
+          updateSwipeIndicator(toolsGrid, toolsCards, toolsIndicator);
+        }, {passive: true});
+      }
+    }
+    
+    // 更新滑动指示器
+    function updateSwipeIndicator(container, items, indicator) {
+      const scrollPosition = container.scrollLeft;
+      const containerWidth = container.offsetWidth;
+      
+      // 计算当前可见的卡片索引
+      let activeIndex = 0;
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        const itemLeft = item.offsetLeft - container.offsetLeft;
+        const itemCenter = itemLeft + item.offsetWidth / 2;
+        
+        if (itemCenter > scrollPosition && itemCenter < scrollPosition + containerWidth) {
+          activeIndex = i;
+          break;
+        }
+      }
+      
+      // 更新指示器状态
+      const dots = indicator.querySelectorAll('.swipe-dot');
+      dots.forEach((dot, index) => {
+        if (index === activeIndex) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+    }
+    
+    // 页面加载完成后创建滑动指示器
+    window.addEventListener('load', () => {
+      createSwipeIndicators();
+    });
+  </script>
+</body>
+</html>
